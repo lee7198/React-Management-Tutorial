@@ -24,7 +24,7 @@ const customers = [
   {
     id: 1,
     image: "https://placeimg.com/128/128/any",
-    name: "이도경",
+    name: "이도경1",
     birthday: "981228",
     gender: "남자",
     job: "대학생",
