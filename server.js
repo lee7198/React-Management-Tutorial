@@ -10,7 +10,7 @@ app.get("/api/customers", (req, res) => {
   res.send([
     {
       id: 1,
-      image: "https://placeimg.com/128/128/any",
+      image: "https://placeimg.com/64/64/any",
       name: "이도경1",
       birthday: "981228",
       gender: "남자",
@@ -18,7 +18,7 @@ app.get("/api/customers", (req, res) => {
     },
     {
       id: 2,
-      image: "https://placeimg.com/128/128/1",
+      image: "https://placeimg.com/64/64/1",
       name: "박신입",
       birthday: "020101",
       gender: "남자",
@@ -26,7 +26,7 @@ app.get("/api/customers", (req, res) => {
     },
     {
       id: 3,
-      image: "https://placeimg.com/128/128/2",
+      image: "https://placeimg.com/64/64/2",
       name: "김화석",
       birthday: "931231",
       gender: "남자",
