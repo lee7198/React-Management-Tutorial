@@ -19,6 +19,15 @@ class CustomerAdd extends React.Component {
     e.preventDefault();
     this.addCustomer().then((response) => {
       console.log(response.data);
+      this.props.stateRefresh();
+    });
+    this.setState({
+      file: null,
+      username: "",
+      birthday: "",
+      gender: "",
+      job: "",
+      fileName: "",
     });
   };
 
@@ -67,8 +76,8 @@ class CustomerAdd extends React.Component {
         이름 :
         <input
           type="text"
-          name="userName"
-          value={this.state.userName}
+          name="username"
+          value={this.state.username}
           onChange={this.handleValueChange}
         />
         <br />
