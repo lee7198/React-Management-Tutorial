@@ -78,6 +78,7 @@ class App extends Component {
                 <TableCell>생일</TableCell>
                 <TableCell>성별</TableCell>
                 <TableCell>직업</TableCell>
+                <TableCell>설정</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -85,6 +86,7 @@ class App extends Component {
                 this.state.customers.map((c) => {
                   return (
                     <Customer
+                      stateRefresh={this.stateRefresh}
                       //.map을 사용하면 key값을 줘야 오류 안뜸.
                       key={c.id}
                       id={c.id}
