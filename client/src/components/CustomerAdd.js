@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { post } from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,12 +7,33 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
-// import e from "express";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+// import DatePick from "./DatePick";
+import { makeStyles } from "@material-ui/core/styles";
+
+import DatePicker from "./DatePicker";
+import DatePick from "./DatePick";
 
 const styles = (theme) => ({
   hidden: {
     display: "none",
   },
+  dialog: {
+    minWidth: 800,
+    padding: 0,
+  },
+  // container: {
+  //   display: "flex",
+  //   flexWrap: "wrap",
+  // },
+  // textField: {
+  //   marginLeft: theme.spacing(1),
+  //   marginRight: theme.spacing(1),
+  //   width: 300,
+  // },
 });
 
 class CustomerAdd extends React.Component {
@@ -21,7 +42,7 @@ class CustomerAdd extends React.Component {
     this.state = {
       file: null,
       username: "",
-      birthday: "",
+      birthday: null,
       gender: "",
       job: "",
       fileName: "",
@@ -38,7 +59,7 @@ class CustomerAdd extends React.Component {
     this.setState({
       file: null,
       username: "",
-      birthday: "",
+      birthday: null,
       gender: "",
       job: "",
       fileName: "",
@@ -59,7 +80,12 @@ class CustomerAdd extends React.Component {
     this.setState(nextState);
   };
 
+  changeDate = (e) => {
+    this.setState({ delivery_date: e.target.value });
+  };
+
   addCustomer = () => {
+    const { subscribeOption, delivery_date } = this.state;
     const url = "/api/customers";
     const formData = new FormData();
     formData.append("image", this.state.file);
@@ -85,7 +111,7 @@ class CustomerAdd extends React.Component {
     this.setState({
       file: null,
       username: "",
-      birthday: "",
+      birthday: null,
       gender: "",
       job: "",
       fileName: "",
@@ -104,9 +130,13 @@ class CustomerAdd extends React.Component {
         >
           고객 추가
         </Button>
-        <Dialog open={this.state.open} onClose={this.handleClose}>
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          className={classes.dialog}
+        >
           <DialogTitle>고객 추가</DialogTitle>
-          <DialogContent>
+          <DialogContent className={classes.container}>
             <input
               className={classes.hidden}
               accept="image/*"
@@ -129,37 +159,61 @@ class CustomerAdd extends React.Component {
               </Button>
             </label>
             <br />
+            <br />
             <TextField
-              label="이름"
+              label="이름 *"
               type="text"
               name="username"
               value={this.state.username}
               onChange={this.handleValueChange}
+              className={classes.textField}
             />
             <br />
-            <TextField
-              label="생년월일"
+            <DatePicker />
+            {/* <DatePick /> */}
+            {/* <TextField
+              label="생년월일 *"
               type="text"
               name="birthday"
               value={this.birthday}
               onChange={this.handleValueChange}
-            />
+            /> */}
             <br />
-            <TextField
-              label="성별"
-              type="text"
+            <br />
+            <RadioGroup
+              aria-label="gender"
               name="gender"
               value={this.gender}
               onChange={this.handleValueChange}
-            />
-            <br />
+              className={classes.textField}
+            >
+              성별 *
+              <FormControlLabel
+                color="primary"
+                value="여자"
+                control={<Radio color="primary" />}
+                label="여자"
+              />
+              <FormControlLabel
+                value="남자"
+                control={<Radio color="primary" />}
+                label="남자"
+              />
+              <FormControlLabel
+                value="기타"
+                control={<Radio color="primary" />}
+                label="기타"
+              />
+            </RadioGroup>
             <TextField
               label="직업"
               type="text"
               name="job"
               value={this.job}
               onChange={this.handleValueChange}
+              className={classes.textField}
             />
+            <br />
           </DialogContent>
           <DialogActions>
             <Button
