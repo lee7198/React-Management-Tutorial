@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { setState } from "react";
 import { post } from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,12 +10,19 @@ import { withStyles } from "@material-ui/core/styles";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import TextMask from "./TextMask";
 
-// import DatePick from "./DatePick";
-import { makeStyles } from "@material-ui/core/styles";
+// import DatePick from "./DatePick"
 
-import DatePicker from "./DatePicker";
-import DatePick from "./DatePick";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
+import "./CustomerAdd.css";
 
 const styles = (theme) => ({
   hidden: {
@@ -25,15 +32,6 @@ const styles = (theme) => ({
     minWidth: 800,
     padding: 0,
   },
-  // container: {
-  //   display: "flex",
-  //   flexWrap: "wrap",
-  // },
-  // textField: {
-  //   marginLeft: theme.spacing(1),
-  //   marginRight: theme.spacing(1),
-  //   width: 300,
-  // },
 });
 
 class CustomerAdd extends React.Component {
@@ -48,6 +46,7 @@ class CustomerAdd extends React.Component {
       fileName: "",
       open: false,
     };
+    this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   handleFormSubmit = (e) => {
@@ -111,7 +110,7 @@ class CustomerAdd extends React.Component {
     this.setState({
       file: null,
       username: "",
-      birthday: null,
+      birthday: "",
       gender: "",
       job: "",
       fileName: "",
@@ -137,6 +136,7 @@ class CustomerAdd extends React.Component {
         >
           <DialogTitle>고객 추가</DialogTitle>
           <DialogContent className={classes.container}>
+            {/* <DatePick /> */}
             <input
               className={classes.hidden}
               accept="image/*"
@@ -166,19 +166,57 @@ class CustomerAdd extends React.Component {
               name="username"
               value={this.state.username}
               onChange={this.handleValueChange}
-              className={classes.textField}
+              // className={classes.textField}
             />
             <br />
-            <DatePicker />
-            {/* <DatePick /> */}
-            {/* <TextField
+            {/* <DatePicker
+              value={this.birthday}
               label="생년월일 *"
               type="text"
               name="birthday"
-              value={this.birthday}
               onChange={this.handleValueChange}
             /> */}
+            {/* <MuiPicker /> */}
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container justify="space-around">
+                <KeyboardDatePicker
+                  // disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  name="birthday"
+                  value={new Date()}
+                  onChange={this.handleValueChange}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
             <br />
+            <TextField
+              id="date"
+              label="birthday2"
+              type="date"
+              defaultValue={new Date()}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            {/* <DatePick /> */}
+            <br />
+            {/* <TextField
+              label="생년월일 *"
+              type="number"
+              name="birthday"
+              value={this.birthday}
+              onChange={this.handleValueChange}
+              inputProps={{
+                maxlength: 3,
+              }}
+              helperText={"1123"}
+            /> */}
             <br />
             <RadioGroup
               aria-label="gender"

@@ -5,6 +5,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = (theme) => ({
+  inlineBlock: {
+    display: "inline-block",
+  },
+});
 
 class CustomerDelete extends React.Component {
   constructor(props) {
@@ -35,15 +44,16 @@ class CustomerDelete extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
-        <Button
-          variant="contained"
-          color="secondary"
+      <div className={classes.inlineBlock}>
+        <IconButton
+          // variant="contained"
+          // color="primary"
           onClick={this.handleClickOpen}
         >
-          삭제
-        </Button>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose}>
           <DialogTitle onClose={this.handleClose}>⚠️ 삭제 경고</DialogTitle>
           <DialogContent>
@@ -73,4 +83,4 @@ class CustomerDelete extends React.Component {
   }
 }
 
-export default CustomerDelete;
+export default withStyles(styles)(CustomerDelete);

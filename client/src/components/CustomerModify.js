@@ -5,6 +5,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = (theme) => ({
+  inlineBlock: {
+    display: "inline-block",
+  },
+});
 
 class CustomerModify extends React.Component {
   constructor(props) {
@@ -29,23 +38,24 @@ class CustomerModify extends React.Component {
   deleteCustomer(id) {
     const url = "/api/customers/" + id;
     fetch(url, {
-      method: "MODIFY",
+      method: "DELETE",
     });
     this.props.stateRefresh();
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
-        <Button
-          variant="contained"
-          color="secondary"
+      <div className={classes.inlineBlock}>
+        <IconButton
+          // variant="contained"
+          // color="primary"
           onClick={this.handleClickOpen}
         >
-          삭제
-        </Button>
+          <EditIcon fontSize="small" />
+        </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose}>
-          <DialogTitle onClose={this.handleClose}>⚠️ 삭제 경고</DialogTitle>
+          <DialogTitle onClose={this.handleClose}>수정하기</DialogTitle>
           <DialogContent>
             <Typography gutterBottom>선택한 고객 정보가 삭제됩니다.</Typography>
           </DialogContent>
@@ -57,7 +67,7 @@ class CustomerModify extends React.Component {
                 this.deleteCustomer(this.props.id);
               }}
             >
-              삭제
+              수정
             </Button>
             <Button
               variant="outlined"
@@ -73,4 +83,4 @@ class CustomerModify extends React.Component {
   }
 }
 
-export default CustomerModify;
+export default withStyles(styles)(CustomerModify);
