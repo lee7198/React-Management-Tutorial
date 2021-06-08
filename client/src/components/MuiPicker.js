@@ -7,6 +7,8 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
+import koLocale from "date-fns/locale/ko";
+
 export default function MaterialUIPickers() {
   // The first commit of Material-UI
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -16,22 +18,20 @@ export default function MaterialUIPickers() {
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container justify="space-around">
-        <KeyboardDatePicker
-          // disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Date picker inline"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            "aria-label": "change date",
-          }}
-        />
-      </Grid>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
+      <KeyboardDatePicker
+        // disableToolbar
+        variant="inline"
+        format="yyyy년 MM월 dd일"
+        margin="normal"
+        id="date-picker-inline"
+        label="생년월일"
+        value={selectedDate}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{
+          "aria-label": "change date",
+        }}
+      />
     </MuiPickersUtilsProvider>
   );
 }

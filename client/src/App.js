@@ -94,7 +94,7 @@ const styles = (theme) => ({
   },
 });
 
-const customers = [];
+// const customers = [];
 
 class App extends Component {
   constructor(props) {
@@ -154,7 +154,7 @@ class App extends Component {
             id={c.id}
             image={c.image}
             name={c.name}
-            birthday={c.birthday}
+            password={c.password}
             gender={c.gender}
             job={c.job}
           />
@@ -166,7 +166,7 @@ class App extends Component {
       "번호",
       "프로필",
       "이름",
-      "생년월일",
+      "비밀번호",
       "성별",
       "직업",
       "설정",

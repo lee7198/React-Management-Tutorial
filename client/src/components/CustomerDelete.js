@@ -55,7 +55,12 @@ class CustomerDelete extends React.Component {
           <DeleteIcon fontSize="small" />
         </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose}>
-          <DialogTitle onClose={this.handleClose}>⚠️ 삭제 경고</DialogTitle>
+          <DialogTitle onClose={this.handleClose}>
+            <span role="img" aria-label="경고">
+              ⚠️
+            </span>{" "}
+            삭제 경고
+          </DialogTitle>
           <DialogContent>
             <Typography gutterBottom>선택한 고객 정보가 삭제됩니다.</Typography>
           </DialogContent>

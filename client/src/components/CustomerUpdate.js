@@ -1,31 +1,32 @@
 import React from "react";
-import { post } from "axios";
+import { update } from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
 import { withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-
-import "./CustomerAdd.css";
 
 const styles = (theme) => ({
   hidden: {
     display: "none",
   },
-  dialog: {
-    minWidth: 800,
-    padding: 0,
+  inlineBlock: {
+    display: "inline-block",
   },
 });
 
-class CustomerAdd extends React.Component {
+class CustomerUpdate extends React.Component {
   constructor(props) {
     super(props);
+    //초기 보여주는 값
     this.state = {
       file: null,
       username: "",
@@ -72,28 +73,11 @@ class CustomerAdd extends React.Component {
     this.setState({ delivery_date: e.target.value });
   };
 
-  addCustomer = () => {
-    const url = "/api/customers";
-    const formData = new FormData();
-    formData.append("image", this.state.file);
-    formData.append("name", this.state.username);
-    formData.append("password", this.state.password);
-    formData.append("gender", this.state.gender);
-    formData.append("job", this.state.job);
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    return post(url, formData, config);
-  };
-
   handleClickOpen = () => {
     this.setState({
       open: true,
     });
   };
-
   //닫을 때 입력값 초기화
   handleClose = () => {
     this.setState({
@@ -107,25 +91,40 @@ class CustomerAdd extends React.Component {
     });
   };
 
+  updateCustomer(id) {
+    const url = "/api/customers/" + id;
+    fetch(url, {
+      method: "UPDATE",
+    });
+    const formData = new FormData();
+    formData.append("image", this.state.file);
+    formData.append("name", this.state.username);
+    formData.append("password", this.state.password);
+    formData.append("gender", this.state.gender);
+    formData.append("job", this.state.job);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    };
+    return update(url, formData, config);
+  }
+
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <Button
-          variant="contained"
-          color="primary"
+      <div className={classes.inlineBlock}>
+        <IconButton
+          // variant="contained"
+          // color="primary"
           onClick={this.handleClickOpen}
         >
-          고객 추가
-        </Button>
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          className={classes.dialog}
-        >
-          <DialogTitle>고객 추가</DialogTitle>
-          <DialogContent className={classes.container}>
-            {/* <DatePick /> */}
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <Dialog open={this.state.open} onClose={this.handleClose}>
+          <DialogTitle onClose={this.handleClose}>수정하기</DialogTitle>
+          <DialogContent>
+            <Typography gutterBottom>선택한 고객 정보를 수정합니다.</Typography>
             <input
               className={classes.hidden}
               accept="image/*"
@@ -159,9 +158,8 @@ class CustomerAdd extends React.Component {
               // className={classes.textField}
             />
             <br />
-            <br />
             <TextField
-              label="비밀번호"
+              label="현재 비밀번호"
               type="password"
               name="password"
               value={this.password}
@@ -171,6 +169,19 @@ class CustomerAdd extends React.Component {
               }}
               required
             />
+            <br />
+            <TextField
+              label="수정할 비밀번호"
+              type="password"
+              name="newpassword"
+              value={this.newpassword}
+              onChange={this.handleValueChange}
+              inputProps={{
+                maxlength: 20,
+              }}
+              required
+            />
+            <br />
             <br />
             <RadioGroup
               aria-label="gender"
@@ -207,16 +218,18 @@ class CustomerAdd extends React.Component {
             <Button
               variant="contained"
               color="primary"
-              onClick={this.handleFormSubmit}
+              onClick={(e) => {
+                this.updateCustomer(this.props.id);
+              }}
             >
-              추가
+              수정
             </Button>
             <Button
               variant="outlined"
               color="primary"
               onClick={this.handleClose}
             >
-              닫기
+              취소
             </Button>
           </DialogActions>
         </Dialog>
@@ -225,4 +238,4 @@ class CustomerAdd extends React.Component {
   }
 }
 
-export default withStyles(styles)(CustomerAdd);
+export default withStyles(styles)(CustomerUpdate);

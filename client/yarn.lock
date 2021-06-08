@@ -7182,10 +7182,10 @@
     "minimist" "^1.2.0"
     "strip-json-comments" "~2.0.1"
 
-"react-datepicker@^4.1.0":
-  "integrity" "sha512-cQtdnHE+t8yP791TzE2wdUN/hA/Dzzej4BIsbV1jk8K0dCN7gIGQ970DgiwIxp2KwwXf0nbCK6yGmPJObrFMJg=="
-  "resolved" "https://registry.npmjs.org/react-datepicker/-/react-datepicker-4.1.0.tgz"
-  "version" "4.1.0"
+"react-datepicker@^4.1.1":
+  "integrity" "sha512-vtZIA7MbUrffRw1CHiyOGtmTO/tTdZGr5BYaiRucHMTb6rCqA8TkaQhzX6tTwMwP8vV38Khv4UWohrJbiX1rMw=="
+  "resolved" "https://registry.npmjs.org/react-datepicker/-/react-datepicker-4.1.1.tgz"
+  "version" "4.1.1"
   dependencies:
     "@popperjs/core" "^2.9.2"
     "classnames" "^2.2.6"

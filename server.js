@@ -38,11 +38,11 @@ app.post("/api/customers", upload.single("image"), (req, res) => {
   let sql = "INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?, 0, now())";
   let image = "/image/" + req.file.filename;
   let name = req.body.name;
-  let birthday = req.body.birthday;
+  let password = req.body.password;
   let gender = req.body.gender;
   let job = req.body.job;
-  console.log("이름은 " + birthday);
-  let params = [image, name, birthday, gender, job];
+  console.log("이름은 " + password);
+  let params = [image, name, password, gender, job];
   connection.query(sql, params, (err, rows, fields) => {
     res.send(rows);
     console.log(err);
@@ -51,9 +51,23 @@ app.post("/api/customers", upload.single("image"), (req, res) => {
 });
 
 app.delete("/api/customers/:id", (req, res) => {
-  console.log("ss");
+  console.log([req.params.id], "번 고객 정보를 삭제하였습니다.");
   let sql = "UPDATE CUSTOMER SET isDeleted = 1 WHERE id = ?";
   let params = [req.params.id];
+  connection.query(sql, params, (err, rows, fields) => {
+    res.send(rows);
+  });
+});
+
+app.update("/api/customers:id", upload.single("image"), (req, res) => {
+  let sql =
+    "UPDATE CUSTOMER SET image = ?, name = ?, job = ? WHERE id = ?, password = ?";
+  let image = "/image/" + req.file.filename;
+  let name = req.body.name;
+  let password = req.body.password;
+  let newPassword = req.body.newPassword;
+  let job = req.body.job;
+  let params = [image, name, job, newPassword, req.params.id, password];
   connection.query(sql, params, (err, rows, fields) => {
     res.send(rows);
   });
