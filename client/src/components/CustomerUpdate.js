@@ -1,5 +1,5 @@
 import React from "react";
-import { update } from "axios";
+import PUT from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -83,7 +83,7 @@ class CustomerUpdate extends React.Component {
     this.setState({
       file: null,
       username: "",
-      password: "",
+      password: null,
       gender: "",
       job: "",
       fileName: "",
@@ -107,7 +107,7 @@ class CustomerUpdate extends React.Component {
         "content-type": "multipart/form-data",
       },
     };
-    return update(url, formData, config);
+    return PUT(url, formData, config);
   }
 
   render() {
@@ -163,18 +163,6 @@ class CustomerUpdate extends React.Component {
               type="password"
               name="password"
               value={this.password}
-              onChange={this.handleValueChange}
-              inputProps={{
-                maxlength: 20,
-              }}
-              required
-            />
-            <br />
-            <TextField
-              label="수정할 비밀번호"
-              type="password"
-              name="newpassword"
-              value={this.newpassword}
               onChange={this.handleValueChange}
               inputProps={{
                 maxlength: 20,

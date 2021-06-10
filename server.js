@@ -59,15 +59,14 @@ app.delete("/api/customers/:id", (req, res) => {
   });
 });
 
-app.update("/api/customers:id", upload.single("image"), (req, res) => {
+app.put("/api/customers/:id", upload.single("image"), (req, res) => {
   let sql =
     "UPDATE CUSTOMER SET image = ?, name = ?, job = ? WHERE id = ?, password = ?";
   let image = "/image/" + req.file.filename;
   let name = req.body.name;
   let password = req.body.password;
-  let newPassword = req.body.newPassword;
   let job = req.body.job;
-  let params = [image, name, job, newPassword, req.params.id, password];
+  let params = [image, name, job, req.params.id, password];
   connection.query(sql, params, (err, rows, fields) => {
     res.send(rows);
   });
