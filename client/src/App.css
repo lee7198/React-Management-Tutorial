@@ -5,4 +5,17 @@
   width: 64px;
   height: 64px;
   object-fit: cover;
+  border-radius: 50%;
+}
+
+.modifyIMG {
+  display: block;
+  width: 128px !important;
+  height: 128px !important;
+}
+
+.middle {
+  display: block;
+  margin: 10px auto;
+  text-align: center;
 }

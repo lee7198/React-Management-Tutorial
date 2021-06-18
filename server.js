@@ -36,14 +36,15 @@ app.use("/image", express.static("./upload"));
 
 app.post("/api/customers", upload.single("image"), (req, res) => {
   let sql = "INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?, 0, now())";
+  console.log("zzzz" + req.body.image);
   let image = "/image/" + req.file.filename;
   let name = req.body.name;
   let password = req.body.password;
   let gender = req.body.gender;
   let job = req.body.job;
-  console.log("이름은 " + password);
   let params = [image, name, password, gender, job];
   connection.query(sql, params, (err, rows, fields) => {
+    console.log(params);
     res.send(rows);
     console.log(err);
     console.log(rows);
@@ -56,20 +57,44 @@ app.delete("/api/customers/:id", (req, res) => {
   let params = [req.params.id];
   connection.query(sql, params, (err, rows, fields) => {
     res.send(rows);
+    console.log(err);
+    console.log(rows);
   });
 });
 
 app.put("/api/customers/:id", upload.single("image"), (req, res) => {
-  let sql =
-    "UPDATE CUSTOMER SET image = ?, name = ?, job = ? WHERE id = ?, password = ?";
-  let image = "/image/" + req.file.filename;
+  console.log("PUT을 시작합니다.");
+  console.log(req.params.id + "번 고객 정보를 수정합니다.");
   let name = req.body.name;
   let password = req.body.password;
   let job = req.body.job;
-  let params = [image, name, job, req.params.id, password];
-  connection.query(sql, params, (err, rows, fields) => {
-    res.send(rows);
-  });
+  let gender = req.body.gender;
+  //사진파일 추가
+  if (req.body.fileCheck == "1") {
+    console.log("파일있습네다");
+    let sql =
+      "UPDATE CUSTOMER SET image = ?, name = ?, job = ?, gender = ?, password = ? WHERE id = ?";
+    let image = "/image/" + req.file.filename;
+    let params = [image, name, job, gender, password, req.params.id];
+    connection.query(sql, params, (err, rows, fields) => {
+      res.send(rows);
+      console.log(err);
+      console.log(rows);
+      console.log(params);
+    });
+    //사진파일 없을 때
+  } else {
+    console.log("파일없습네다");
+    let sql =
+      "UPDATE CUSTOMER SET name = ?, job = ?, gender = ?, password = ? WHERE id = ?";
+    let params = [name, job, gender, password, req.params.id];
+    connection.query(sql, params, (err, rows, fields) => {
+      res.send(rows);
+      console.log(err);
+      console.log(rows);
+      console.log(params);
+    });
+  }
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

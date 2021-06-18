@@ -1,5 +1,5 @@
 import React from "react";
-import PUT from "axios";
+import { put } from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -13,6 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import { shadows } from "@material-ui/system";
+import Box from "@material-ui/core/Box";
 
 const styles = (theme) => ({
   hidden: {
@@ -20,6 +22,10 @@ const styles = (theme) => ({
   },
   inlineBlock: {
     display: "inline-block",
+  },
+  ModifyProfile: {
+    display: "block",
+    margin: "10px",
   },
 });
 
@@ -35,16 +41,19 @@ class CustomerUpdate extends React.Component {
       job: this.props.job,
       fileName: "",
       open: false,
+      image: this.props.image,
     };
     this.handleValueChange = this.handleValueChange.bind(this);
   }
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-    this.addCustomer().then((response) => {
+    this.updateCustomer().then((response) => {
+      console.log("PUT전송하였습니다!!!!!!");
       console.log(response.data);
       this.props.stateRefresh();
     });
+    //전송 후 초기화
     this.setState({
       file: null,
       username: "",
@@ -53,6 +62,7 @@ class CustomerUpdate extends React.Component {
       job: "",
       fileName: "",
       open: false,
+      image: "",
     });
   };
 
@@ -81,33 +91,43 @@ class CustomerUpdate extends React.Component {
   //닫을 때 입력값 초기화
   handleClose = () => {
     this.setState({
-      file: null,
-      username: "",
-      password: "",
-      gender: "",
-      job: "",
-      fileName: "",
+      // file: null,
+      // username: "",
+      // password: "",
+      // gender: "",
+      // job: "",
+      // fileName: "",
       open: false,
+      // image: "",
     });
   };
 
   updateCustomer = (id) => {
     const url = "/api/customers/" + id;
-    fetch(url, {
-      method: "PUT",
-    });
-    const formDataPut = new FormData();
-    formDataPut.append("image", this.state.file);
-    formDataPut.append("name", this.state.username);
-    formDataPut.append("password", this.state.password);
-    formDataPut.append("gender", this.state.gender);
-    formDataPut.append("job", this.state.job);
+    // fetch(url, {
+    //   method: "PUT",
+    // });
+    const formData = new FormData();
+
+    if (this.state.fileName !== "") {
+      console.log("파일유");
+      formData.set("image", this.state.file);
+      formData.set("fileCheck", "1");
+    } else {
+      console.log("파일무");
+      formData.set("fileCheck", "0");
+    }
+    formData.set("name", this.state.username);
+    formData.set("password", this.state.password);
+    formData.set("gender", this.state.gender);
+    formData.set("job", this.state.job);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
       },
     };
-    return PUT(url, formDataPut, config);
+    return put(url, formData, config);
+    // return this.props.stateRefresh();
   };
 
   render() {
@@ -125,6 +145,16 @@ class CustomerUpdate extends React.Component {
           <DialogTitle onClose={this.handleClose}>수정하기</DialogTitle>
           <DialogContent>
             <Typography gutterBottom>선택한 고객 정보를 수정합니다.</Typography>
+            <Box boxShadow={5} className="profileIMG modifyIMG middle">
+              <img
+                className="profileIMG modifyIMG middle"
+                src={this.state.image}
+                alt="profile"
+              />
+            </Box>
+            <Typography className="middle" variant="h5">
+              현재 이미지
+            </Typography>
             <input
               className={classes.hidden}
               accept="image/*"
@@ -134,19 +164,19 @@ class CustomerUpdate extends React.Component {
               value={this.state.fileName}
               onChange={this.handleFileChange}
             />
-            <label htmlFor="raised-button-file">
+            <label htmlFor="raised-button-file" className="middle">
               <Button
                 variant="contained"
                 color="primary"
                 component="span"
                 name="file"
+                className="middle"
               >
                 {this.state.fileName === ""
-                  ? "프로필 이미지 선택"
+                  ? "프로필 이미지 수정"
                   : this.state.fileName}
               </Button>
             </label>
-            <br />
             <br />
             <TextField
               label="이름"
@@ -155,7 +185,6 @@ class CustomerUpdate extends React.Component {
               value={this.state.username}
               onChange={this.handleValueChange}
               required
-              // className={classes.textField}
             />
             <br />
             <TextField
@@ -181,15 +210,15 @@ class CustomerUpdate extends React.Component {
             >
               성별
               <FormControlLabel
+                value="남자"
+                control={<Radio color="primary" />}
+                label="남자"
+              />
+              <FormControlLabel
                 color="primary"
                 value="여자"
                 control={<Radio color="primary" />}
                 label="여자"
-              />
-              <FormControlLabel
-                value="남자"
-                control={<Radio color="primary" />}
-                label="남자"
               />
             </RadioGroup>
             <TextField

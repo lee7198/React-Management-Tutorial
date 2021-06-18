@@ -42,6 +42,7 @@ class CustomerAdd extends React.Component {
     e.preventDefault();
     this.addCustomer().then((response) => {
       console.log(response.data);
+      console.log("전송완류!!!!!!!!");
       this.props.stateRefresh();
     });
     this.setState({
@@ -75,7 +76,15 @@ class CustomerAdd extends React.Component {
   addCustomer = () => {
     const url = "/api/customers";
     const formData = new FormData();
-    formData.append("image", this.state.file);
+    if (this.state.fileName !== "") {
+      console.log("파일유");
+      formData.append("image", this.state.file);
+      formData.append("fileCheck", "1");
+    } else {
+      console.log("파일무");
+      formData.append("image", "dafaultUser");
+      formData.append("fileCheck", "0");
+    }
     formData.append("name", this.state.username);
     formData.append("password", this.state.password);
     formData.append("gender", this.state.gender);
@@ -125,7 +134,7 @@ class CustomerAdd extends React.Component {
         >
           <DialogTitle>고객 추가</DialogTitle>
           <DialogContent className={classes.container}>
-            {/* <DatePick /> */}
+            {this.state.fileName}
             <input
               className={classes.hidden}
               accept="image/*"
@@ -182,15 +191,15 @@ class CustomerAdd extends React.Component {
             >
               성별
               <FormControlLabel
+                value="남자"
+                control={<Radio color="primary" />}
+                label="남자"
+              />
+              <FormControlLabel
                 color="primary"
                 value="여자"
                 control={<Radio color="primary" />}
                 label="여자"
-              />
-              <FormControlLabel
-                value="남자"
-                control={<Radio color="primary" />}
-                label="남자"
               />
             </RadioGroup>
             <TextField

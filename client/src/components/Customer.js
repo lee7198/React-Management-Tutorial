@@ -24,7 +24,7 @@ class Customer extends React.Component {
             password={this.props.password}
             gender={this.props.gender}
             job={this.props.job}
-            filename={this.props.image}
+            image={this.props.image}
           />
           <CustomerDelete
             stateRefresh={this.props.stateRefresh}
