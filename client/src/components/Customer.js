@@ -20,6 +20,11 @@ class Customer extends React.Component {
           <CustomerUpdate
             stateRefresh={this.props.stateRefresh}
             id={this.props.id}
+            username={this.props.name}
+            password={this.props.password}
+            gender={this.props.gender}
+            job={this.props.job}
+            filename={this.props.image}
           />
           <CustomerDelete
             stateRefresh={this.props.stateRefresh}

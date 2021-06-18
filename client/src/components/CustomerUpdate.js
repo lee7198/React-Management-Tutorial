@@ -29,10 +29,10 @@ class CustomerUpdate extends React.Component {
     //초기 보여주는 값
     this.state = {
       file: null,
-      username: "",
-      password: null,
-      gender: "",
-      job: "",
+      username: this.props.username,
+      password: this.props.password,
+      gender: this.props.gender,
+      job: this.props.job,
       fileName: "",
       open: false,
     };
@@ -48,7 +48,7 @@ class CustomerUpdate extends React.Component {
     this.setState({
       file: null,
       username: "",
-      password: null,
+      password: "",
       gender: "",
       job: "",
       fileName: "",
@@ -83,7 +83,7 @@ class CustomerUpdate extends React.Component {
     this.setState({
       file: null,
       username: "",
-      password: null,
+      password: "",
       gender: "",
       job: "",
       fileName: "",
@@ -91,24 +91,24 @@ class CustomerUpdate extends React.Component {
     });
   };
 
-  updateCustomer(id) {
+  updateCustomer = (id) => {
     const url = "/api/customers/" + id;
     fetch(url, {
-      method: "UPDATE",
+      method: "PUT",
     });
-    const formData = new FormData();
-    formData.append("image", this.state.file);
-    formData.append("name", this.state.username);
-    formData.append("password", this.state.password);
-    formData.append("gender", this.state.gender);
-    formData.append("job", this.state.job);
+    const formDataPut = new FormData();
+    formDataPut.append("image", this.state.file);
+    formDataPut.append("name", this.state.username);
+    formDataPut.append("password", this.state.password);
+    formDataPut.append("gender", this.state.gender);
+    formDataPut.append("job", this.state.job);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
       },
     };
-    return PUT(url, formData, config);
-  }
+    return PUT(url, formDataPut, config);
+  };
 
   render() {
     const { classes } = this.props;
@@ -160,9 +160,9 @@ class CustomerUpdate extends React.Component {
             <br />
             <TextField
               label="현재 비밀번호"
-              type="password"
+              type="text"
               name="password"
-              value={this.password}
+              value={this.state.password}
               onChange={this.handleValueChange}
               inputProps={{
                 maxlength: 20,
@@ -174,7 +174,7 @@ class CustomerUpdate extends React.Component {
             <RadioGroup
               aria-label="gender"
               name="gender"
-              value={this.gender}
+              value={this.state.gender}
               onChange={this.handleValueChange}
               className={classes.textField}
               required
@@ -196,7 +196,7 @@ class CustomerUpdate extends React.Component {
               label="직업"
               type="text"
               name="job"
-              value={this.job}
+              value={this.state.job}
               onChange={this.handleValueChange}
               className={classes.textField}
             />

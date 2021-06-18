@@ -157,6 +157,7 @@ class App extends Component {
             password={c.password}
             gender={c.gender}
             job={c.job}
+            // fileCheck={c.fileCheck}
           />
         );
       });
