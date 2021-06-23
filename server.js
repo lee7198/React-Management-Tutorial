@@ -35,20 +35,33 @@ app.get("/api/customers", (req, res) => {
 app.use("/image", express.static("./upload"));
 
 app.post("/api/customers", upload.single("image"), (req, res) => {
-  let sql = "INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?, 0, now())";
-  console.log("zzzz" + req.body.image);
-  let image = "/image/" + req.file.filename;
   let name = req.body.name;
   let password = req.body.password;
   let gender = req.body.gender;
   let job = req.body.job;
-  let params = [image, name, password, gender, job];
-  connection.query(sql, params, (err, rows, fields) => {
-    console.log(params);
-    res.send(rows);
-    console.log(err);
-    console.log(rows);
-  });
+  if (req.body.fileCheck == "1") {
+    console.log("파일 있는 회원 등록");
+    let sql = "INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?, 0, now())";
+    let image = "/image/" + req.file.filename;
+    let params = [image, name, password, gender, job];
+    connection.query(sql, params, (err, rows, fields) => {
+      console.log(params);
+      res.send(rows);
+      console.log(err);
+      console.log(rows);
+    });
+  } else {
+    console.log("파일 없는 회원 등록");
+    let sql = "INSERT INTO CUSTOMER VALUES (null, ?, ?, ?, ?, ?, 0, now())";
+    let image = "/image/dafaultUser";
+    let params = [image, name, password, gender, job];
+    connection.query(sql, params, (err, rows, fields) => {
+      console.log(params);
+      res.send(rows);
+      console.log(err);
+      console.log(rows);
+    });
+  }
 });
 
 app.delete("/api/customers/:id", (req, res) => {

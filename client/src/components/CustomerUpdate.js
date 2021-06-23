@@ -126,8 +126,7 @@ class CustomerUpdate extends React.Component {
         "content-type": "multipart/form-data",
       },
     };
-    return put(url, formData, config);
-    // return this.props.stateRefresh();
+    return put(url, formData, config), this.props.stateRefresh();
   };
 
   render() {

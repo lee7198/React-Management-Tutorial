@@ -94,7 +94,7 @@ const styles = (theme) => ({
 
 // const customers = [];
 
-class App extends Component {
+class management extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -232,4 +232,4 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(management);
