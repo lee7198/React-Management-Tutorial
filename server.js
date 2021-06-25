@@ -96,11 +96,23 @@ app.put("/api/customers/:id", upload.single("image"), (req, res) => {
       console.log(params);
     });
     //사진파일 없을 때
-  } else {
+  } else if (req.body.fileCheck == "0") {
     console.log("파일없습네다");
     let sql =
       "UPDATE CUSTOMER SET name = ?, job = ?, gender = ?, password = ? WHERE id = ?";
     let params = [name, job, gender, password, req.params.id];
+    connection.query(sql, params, (err, rows, fields) => {
+      res.send(rows);
+      console.log(err);
+      console.log(rows);
+      console.log(params);
+    });
+  } else if (req.body.fileCheck == "2") {
+    console.log("기본사진으로 변경");
+    let sql =
+      "UPDATE CUSTOMER SET image = ?, name = ?, job = ?, gender = ?, password = ? WHERE id = ?";
+    let image = "/image/dafaultUser";
+    let params = [image, name, job, gender, password, req.params.id];
     connection.query(sql, params, (err, rows, fields) => {
       res.send(rows);
       console.log(err);

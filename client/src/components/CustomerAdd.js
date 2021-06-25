@@ -176,7 +176,7 @@ class CustomerAdd extends React.Component {
               value={this.password}
               onChange={this.handleValueChange}
               inputProps={{
-                maxlength: 20,
+                maxLength: 20,
               }}
               required
             />

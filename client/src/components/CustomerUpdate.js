@@ -15,6 +15,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import { shadows } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = (theme) => ({
   hidden: {
@@ -42,6 +43,7 @@ class CustomerUpdate extends React.Component {
       fileName: "",
       open: false,
       image: this.props.image,
+      dafIMG: false,
     };
     this.handleValueChange = this.handleValueChange.bind(this);
   }
@@ -63,6 +65,7 @@ class CustomerUpdate extends React.Component {
       fileName: "",
       open: false,
       image: "",
+      dafIMG: false,
     });
   };
 
@@ -77,6 +80,13 @@ class CustomerUpdate extends React.Component {
     let nextState = {};
     nextState[e.target.name] = e.target.value;
     this.setState(nextState);
+  };
+
+  handleChangeIMG = (event) => {
+    if (!this.state.dafIMG) {
+      console.log("dafIMG check!");
+    }
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
   };
 
   changeDate = (e) => {
@@ -116,6 +126,10 @@ class CustomerUpdate extends React.Component {
     } else {
       console.log("파일무");
       formData.set("fileCheck", "0");
+    }
+    if (this.state.dafIMG) {
+      console.log("기본파일하신다고?");
+      formData.set("fileCheck", "2");
     }
     formData.set("name", this.state.username);
     formData.set("password", this.state.password);
@@ -176,6 +190,17 @@ class CustomerUpdate extends React.Component {
                   : this.state.fileName}
               </Button>
             </label>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.dafIMG}
+                  onChange={this.handleChangeIMG}
+                  name="dafIMG"
+                  color="primary"
+                />
+              }
+              label="기본이미지"
+            />
             <br />
             <TextField
               label="이름"
@@ -193,7 +218,7 @@ class CustomerUpdate extends React.Component {
               value={this.state.password}
               onChange={this.handleValueChange}
               inputProps={{
-                maxlength: 20,
+                maxLength: 20,
               }}
               required
             />
