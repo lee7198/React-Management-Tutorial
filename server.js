@@ -32,6 +32,15 @@ app.get("/api/customers", (req, res) => {
   );
 });
 
+app.get("/api/sns_bbs", (req, res) => {
+  connection.query(
+    "SELECT * FROM CUSTOMER WHERE isDeleted = 0",
+    (err, rows, fields) => {
+      res.send(rows);
+    }
+  );
+});
+
 app.use("/image", express.static("./upload"));
 
 app.post("/api/customers", upload.single("image"), (req, res) => {

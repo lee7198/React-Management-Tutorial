@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Customer from "./components/Customer";
 import CustomerAdd from "./components/CustomerAdd";
+import SNS from "./components/SNS";
 import "./App.css";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -16,6 +17,8 @@ import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import SearchIcon from "@material-ui/icons/Search";
+import Button from "@material-ui/core/Button";
+// import { axios, get } from "axios";
 
 const styles = (theme) => ({
   root: {
@@ -99,14 +102,18 @@ class App extends Component {
     super(props);
     this.state = {
       customers: "",
+      snsbbs: "",
       complete: 0,
       searchKeyword: "",
+      bbsToggle: false,
     };
+    this.bbsHandleChange = this.bbsHandleChange.bind(this);
   }
 
   stateRefresh = () => {
     this.setState({
       customers: "",
+      snsbbs: "",
       complete: 0,
       searchKeyword: "",
     });
@@ -123,7 +130,14 @@ class App extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch("/api/customers");
+    var response = "";
+    if (this.state.bbsToggle) {
+      // 고객관리
+      response = await fetch("/api/customers", { method: "GET" });
+    } else {
+      // sns관리
+      response = await fetch("/api/sns_bbs");
+    }
     const body = await response.json();
     return body;
   };
@@ -138,6 +152,14 @@ class App extends Component {
     nextState[e.target.name] = e.target.value;
     this.setState(nextState);
   };
+
+  bbsHandleChange() {
+    console.log("메뉴 토글!!");
+    this.setState({
+      bbsToggle: !this.state.bbsToggle,
+    });
+    this.stateRefresh();
+  }
 
   render() {
     const filteredComponrnts = (data) => {
@@ -175,57 +197,76 @@ class App extends Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
+            {/* 타이틀 문자 */}
             <Typography className={classes.title} variant="h6" noWrap>
-              고객 관리 시스템
+              {this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
             </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+            {/* 버튼 문자 */}
+            <Button variant="contained" onClick={this.bbsHandleChange}>
+              {!this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
+            </Button>
+            {this.state.bbsToggle === false ? (
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="이름으로 검색"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                  name="searchKeyword"
+                  value={this.state.searchKeyword}
+                  onChange={this.handleValueChange}
+                />
               </div>
-              <InputBase
-                placeholder="이름으로 검색"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-                name="searchKeyword"
-                value={this.state.searchKeyword}
-                onChange={this.handleValueChange}
-              />
-            </div>
+            ) : (
+              ""
+            )}
           </Toolbar>
         </AppBar>
-        <div className={classes.menu}>
-          <CustomerAdd stateRefresh={this.stateRefresh} />
-        </div>
+
+        {this.state.bbsToggle === false ? (
+          <div className={classes.menu}>
+            <CustomerAdd stateRefresh={this.stateRefresh} />
+          </div>
+        ) : (
+          ""
+        )}
         <Paper className={classes.paper}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                {cellList.map((c) => {
-                  return (
-                    <TableCell className={classes.tableHead}>{c}</TableCell>
-                  );
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.customers ? (
-                filteredComponrnts(this.state.customers)
-              ) : (
+          {this.state.bbsToggle === false ? (
+            <Table className={classes.table}>
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan="6" align="center">
-                    <CircularProgress
-                      className={classes.progress}
-                      variant="determinate"
-                      value={this.state.completed}
-                    />
-                  </TableCell>
+                  {cellList.map((c) => {
+                    return (
+                      <TableCell className={classes.tableHead}>{c}</TableCell>
+                    );
+                  })}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {/* 데이터 로딩 창 */}
+                {this.state.customers ? (
+                  filteredComponrnts(this.state.customers)
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan="6" align="center">
+                      <CircularProgress
+                        className={classes.progress}
+                        variant="determinate"
+                        value={this.state.completed}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          ) : (
+            <SNS></SNS>
+          )}
         </Paper>
       </div>
     );

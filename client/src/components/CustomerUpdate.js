@@ -140,7 +140,7 @@ class CustomerUpdate extends React.Component {
         "content-type": "multipart/form-data",
       },
     };
-    return put(url, formData, config), this.props.stateRefresh();
+    return put(url, formData, config);
   };
 
   render() {
@@ -155,7 +155,12 @@ class CustomerUpdate extends React.Component {
           <EditIcon fontSize="small" />
         </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose}>
-          <DialogTitle onClose={this.handleClose}>수정하기</DialogTitle>
+          <DialogTitle onClose={this.handleClose}>
+            <span role="img" aria-label="경고">
+              🛠
+            </span>{" "}
+            수정하기
+          </DialogTitle>
           <DialogContent>
             <Typography gutterBottom>선택한 고객 정보를 수정합니다.</Typography>
             <Box boxShadow={5} className="profileIMG modifyIMG middle">
@@ -165,7 +170,7 @@ class CustomerUpdate extends React.Component {
                 alt="profile"
               />
             </Box>
-            <Typography className="middle" variant="h5">
+            <Typography className="middle" variant="subtitle1">
               현재 이미지
             </Typography>
             <input
