@@ -33,9 +33,13 @@ app.get("/api/customers", (req, res) => {
 });
 
 app.get("/api/sns_bbs", (req, res) => {
+  console.log("ㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
   connection.query(
-    "SELECT * FROM CUSTOMER WHERE isDeleted = 0",
+    "SELECT * FROM SNS_BBS WHERE IS_DELETED = 0",
     (err, rows, fields) => {
+      console.log("snsbbs의 로우");
+      console.log(rows);
+      console.log(err);
       res.send(rows);
     }
   );

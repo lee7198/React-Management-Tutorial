@@ -19,6 +19,10 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 // import { axios, get } from "axios";
+import Grid from "@material-ui/core/Grid";
+import FaceIcon from "@material-ui/icons/Face";
+import ArtTrackIcon from "@material-ui/icons/ArtTrack";
+import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 
 const styles = (theme) => ({
   root: {
@@ -46,6 +50,30 @@ const styles = (theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+  },
+  menuIcon: {
+    fontSize: "5rem",
+    color: "#686868",
+    display: "inline-block",
+    margin: 5,
+  },
+  mainButton: {
+    display: "inline-block",
+    width: "300px",
+  },
+  mainButtonTypo: {
+    display: "inline-block",
+    padding: theme.spacing(2),
+    color: "#686868",
+  },
+  mainButtonGrid: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    margin: 20,
+  },
+  mainBG: {
+    // backgroundColor: "blue",
+    padding: 70,
   },
   title: {
     flexGrow: 1,
@@ -93,6 +121,13 @@ const styles = (theme) => ({
       },
     },
   },
+  TypoBot: {
+    marginBottom: 20,
+  },
+  homeIcon: {
+    fontSize: "2.5rem",
+    color: "white",
+  },
 });
 
 // const customers = [];
@@ -100,12 +135,14 @@ const styles = (theme) => ({
 class App extends Component {
   constructor(props) {
     super(props);
+    // 초기설정값
     this.state = {
       customers: "",
       snsbbs: "",
       complete: 0,
       searchKeyword: "",
-      bbsToggle: false,
+      bbsToggle: true,
+      mainPage: 0,
     };
     this.bbsHandleChange = this.bbsHandleChange.bind(this);
   }
@@ -117,15 +154,16 @@ class App extends Component {
       complete: 0,
       searchKeyword: "",
     });
+
     this.callApi()
-      .then((res) => this.setState({ customers: res }))
+      .then((res) => this.setState({ customers: res, snsbbs: res }))
       .catch((err) => console.log(err));
   };
 
   componentDidMount() {
-    this.timer = setInterval(this.progress, 200);
+    this.timer = setInterval(this.progress, 2000);
     this.callApi()
-      .then((res) => this.setState({ customers: res }))
+      .then((res) => this.setState({ customers: res, snsbbs: res }))
       .catch((err) => console.log(err));
   }
 
@@ -136,7 +174,7 @@ class App extends Component {
       response = await fetch("/api/customers", { method: "GET" });
     } else {
       // sns관리
-      response = await fetch("/api/sns_bbs");
+      response = await fetch("/api/sns_bbs", { method: "GET" });
     }
     const body = await response.json();
     return body;
@@ -144,7 +182,7 @@ class App extends Component {
 
   progress = () => {
     const { completed } = this.state;
-    this.setState({ completed: completed >= 1000 ? 0 : completed + 50 });
+    this.setState({ completed: completed >= 1000 ? 0 : completed + 20 });
   };
 
   handleValueChange = (e) => {
@@ -156,10 +194,33 @@ class App extends Component {
   bbsHandleChange() {
     console.log("메뉴 토글!!");
     this.setState({
+      customers: "",
+      snsbbs: "",
       bbsToggle: !this.state.bbsToggle,
     });
     this.stateRefresh();
   }
+
+  customerShow = () => {
+    this.setState({
+      mainPage: 1,
+      bbsToggle: false,
+    });
+    this.stateRefresh();
+  };
+  snsShow = () => {
+    this.setState({
+      mainPage: 1,
+      bbsToggle: true,
+    });
+    this.stateRefresh();
+  };
+
+  gotoMain = () => {
+    this.setState({
+      mainPage: 0,
+    });
+  };
 
   render() {
     const filteredComponrnts = (data) => {
@@ -193,83 +254,163 @@ class App extends Component {
       "설정",
     ];
 
-    return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            {/* 타이틀 문자 */}
-            <Typography className={classes.title} variant="h6" noWrap>
-              {this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
+    if (this.state.mainPage === 0) {
+      return (
+        <div className={classes.mainBG}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            spacing={3}
+          >
+            <Typography className={classes.TypoBot} variant="h1">
+              환영합니다.
             </Typography>
-            {/* 버튼 문자 */}
-            <Button variant="contained" onClick={this.bbsHandleChange}>
-              {!this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
-            </Button>
-            {this.state.bbsToggle === false ? (
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
+            <Typography className={classes.TypoBot} variant="h4">
+              고객, 게시글 관리 시스템 입니다.
+            </Typography>
+            <Typography className={classes.TypoBot} variant="subtitle1">
+              원하시는 매뉴를 선택하세요.
+            </Typography>
+            <Grid container spacing={1} justify="center" alignItems="center">
+              <Grid item xs className={classes.mainButtonGrid}>
+                <Button
+                  className={classes.mainButton}
+                  variant="outlined"
+                  // color="primary"
+                  onClick={this.customerShow}
+                >
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <FaceIcon className={classes.menuIcon} />
+                    <Typography variant="h6" className={classes.mainButtonTypo}>
+                      관리 관리 시스템
+                    </Typography>
+                  </Grid>
+                </Button>
+              </Grid>
+              <Grid item xs className={classes.mainButtonGrid}>
+                <Button
+                  className={classes.mainButton}
+                  variant="outlined"
+                  // color="primary"
+                  onClick={this.snsShow}
+                >
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <ArtTrackIcon className={classes.menuIcon} />
+                    <Typography variant="h6" className={classes.mainButtonTypo}>
+                      SNS 관리 시스템
+                    </Typography>
+                  </Grid>
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else if (this.state.mainPage !== 0) {
+      return (
+        <div className={classes.root}>
+          <AppBar position="static">
+            <Toolbar>
+              {/* 타이틀 문자 */}
+              <Button onClick={this.gotoMain}>
+                <HomeRoundedIcon className={classes.homeIcon} />
+              </Button>
+              <Typography className={classes.title} variant="h6" noWrap>
+                {this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
+              </Typography>
+              {/* 버튼 문자 */}
+              <Button variant="contained" onClick={this.bbsHandleChange}>
+                {!this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
+              </Button>
+              {!this.state.bbsToggle ? (
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder="이름으로 검색"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ "aria-label": "search" }}
+                    name="searchKeyword"
+                    value={this.state.searchKeyword}
+                    onChange={this.handleValueChange}
+                  />
                 </div>
-                <InputBase
-                  placeholder="이름으로 검색"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ "aria-label": "search" }}
-                  name="searchKeyword"
-                  value={this.state.searchKeyword}
-                  onChange={this.handleValueChange}
-                />
-              </div>
-            ) : (
-              ""
-            )}
-          </Toolbar>
-        </AppBar>
+              ) : (
+                ""
+              )}
+            </Toolbar>
+          </AppBar>
 
-        {this.state.bbsToggle === false ? (
-          <div className={classes.menu}>
-            <CustomerAdd stateRefresh={this.stateRefresh} />
-          </div>
-        ) : (
-          ""
-        )}
-        <Paper className={classes.paper}>
-          {this.state.bbsToggle === false ? (
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  {cellList.map((c) => {
-                    return (
-                      <TableCell className={classes.tableHead}>{c}</TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {/* 데이터 로딩 창 */}
-                {this.state.customers ? (
-                  filteredComponrnts(this.state.customers)
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan="6" align="center">
-                      <CircularProgress
-                        className={classes.progress}
-                        variant="determinate"
-                        value={this.state.completed}
-                      />
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+          {!this.state.bbsToggle ? (
+            <div className={classes.menu}>
+              <CustomerAdd stateRefresh={this.stateRefresh} />
+            </div>
           ) : (
-            <SNS></SNS>
+            ""
           )}
-        </Paper>
-      </div>
-    );
+          <Paper className={classes.paper}>
+            {!this.state.bbsToggle ? (
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    {cellList.map((c) => {
+                      return (
+                        <TableCell className={classes.tableHead}>{c}</TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {/* 데이터 로딩 창 */}
+                  {this.state.customers ? (
+                    filteredComponrnts(this.state.customers)
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan="6" align="center">
+                        <CircularProgress
+                          className={classes.progress}
+                          variant="determinate"
+                          value={this.state.completed}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            ) : (
+              <div>
+                {this.state.snsbbs}
+                {/* {this.state.snsbbs.map((c) => {
+                  return (
+                    <SNS
+                      stateRefresh={this.stateRefresh}
+                      IDX={c.IDX}
+                      WRITER={c.WRITER}
+                    />
+                  );
+                })} */}
+              </div>
+            )}
+          </Paper>
+        </div>
+      );
+    }
   }
 }
 

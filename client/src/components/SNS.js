@@ -66,6 +66,7 @@ class SNS extends React.Component {
                     </div>
                     <Typography className={classes.inlineBlock} variant="h4">
                       작성자이름
+                      {this.props.IDX}
                     </Typography>
                   </TableCell>
                 </TableRow>
