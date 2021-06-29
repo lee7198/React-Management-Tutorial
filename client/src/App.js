@@ -76,6 +76,7 @@ const styles = (theme) => ({
     padding: 70,
   },
   title: {
+    marginLeft: 5,
     flexGrow: 1,
     display: "none",
     [theme.breakpoints.up("sm")]: {
@@ -154,17 +155,44 @@ class App extends Component {
       complete: 0,
       searchKeyword: "",
     });
-
-    this.callApi()
-      .then((res) => this.setState({ customers: res, snsbbs: res }))
-      .catch((err) => console.log(err));
+    if (this.state.bbsToggle) {
+      this.callApi()
+        .then((res) =>
+          this.setState({
+            customers: res,
+          })
+        )
+        .catch((err) => console.log(err));
+    } else if (!this.state.bbsToggle) {
+      this.callApi()
+        .then((res) =>
+          this.setState({
+            snsbbs: res,
+          })
+        )
+        .catch((err) => console.log(err));
+    }
   };
 
   componentDidMount() {
-    this.timer = setInterval(this.progress, 2000);
-    this.callApi()
-      .then((res) => this.setState({ customers: res, snsbbs: res }))
-      .catch((err) => console.log(err));
+    this.timer = setInterval(this.progress, 0.02);
+    if (this.state.bbsToggle) {
+      this.callApi()
+        .then((res) =>
+          this.setState({
+            customers: res,
+          })
+        )
+        .catch((err) => console.log(err));
+    } else if (!this.state.bbsToggle) {
+      this.callApi()
+        .then((res) =>
+          this.setState({
+            snsbbs: res,
+          })
+        )
+        .catch((err) => console.log(err));
+    }
   }
 
   callApi = async () => {
@@ -174,7 +202,7 @@ class App extends Component {
       response = await fetch("/api/customers", { method: "GET" });
     } else {
       // sns관리
-      response = await fetch("/api/sns_bbs", { method: "GET" });
+      response = await fetch("/api/snsbbs", { method: "GET" });
     }
     const body = await response.json();
     return body;
@@ -182,7 +210,7 @@ class App extends Component {
 
   progress = () => {
     const { completed } = this.state;
-    this.setState({ completed: completed >= 1000 ? 0 : completed + 20 });
+    this.setState({ completed: completed >= 1000 ? 0 : completed + 1 });
   };
 
   handleValueChange = (e) => {
@@ -328,7 +356,9 @@ class App extends Component {
                 <HomeRoundedIcon className={classes.homeIcon} />
               </Button>
               <Typography className={classes.title} variant="h6" noWrap>
-                {this.state.bbsToggle ? "SNS 관리 시스템" : "고객 관리 시스템"}
+                {this.state.bbsToggle
+                  ? " SNS 관리 시스템"
+                  : " 고객 관리 시스템"}
               </Typography>
               {/* 버튼 문자 */}
               <Button variant="contained" onClick={this.bbsHandleChange}>
@@ -395,16 +425,34 @@ class App extends Component {
               </Table>
             ) : (
               <div>
-                {this.state.snsbbs}
-                {/* {this.state.snsbbs.map((c) => {
-                  return (
-                    <SNS
-                      stateRefresh={this.stateRefresh}
-                      IDX={c.IDX}
-                      WRITER={c.WRITER}
-                    />
-                  );
-                })} */}
+                {this.state.snsbbs ? (
+                  this.state.snsbbs.map((c) => {
+                    return (
+                      <SNS
+                        // IDX={c.IDX}
+                        WRITER={c.WRITER}
+                        CONTENT={c.CONTENT}
+                        CREATE_DATE={c.CREATE_DATE}
+                        IMAGE={c.IMAGE}
+                      />
+                    );
+                  })
+                ) : (
+                  // <Grid container justify="center" alignItems="center">
+                  //   <Typography variant="h2" align="center">
+                  //     <br />
+                  //     <br />
+                  //     죄송합니다.
+                  //     <br />
+                  //     정보가 없습니다.
+                  //     <br />
+                  //     <br />
+                  //     <br />
+                  //   </Typography>
+                  // </Grid>
+
+                  <CircularProgress />
+                )}
               </div>
             )}
           </Paper>

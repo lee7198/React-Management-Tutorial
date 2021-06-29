@@ -32,7 +32,7 @@ app.get("/api/customers", (req, res) => {
   );
 });
 
-app.get("/api/sns_bbs", (req, res) => {
+app.get("/api/snsbbs", (req, res) => {
   console.log("ㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
   connection.query(
     "SELECT * FROM SNS_BBS WHERE IS_DELETED = 0",

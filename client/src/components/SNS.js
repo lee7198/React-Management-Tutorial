@@ -48,10 +48,7 @@ class SNS extends React.Component {
             <TableRow>
               <TableCell className={classes.imagearea}>
                 <TableRow>
-                  <img
-                    src="https://source.unsplash.com/category/nature/500x500"
-                    className={classes.inlineBlock}
-                  />
+                  <img src={this.props.IMAGE} className={classes.inlineBlock} />
                 </TableRow>
               </TableCell>
               <TableCell>
@@ -65,8 +62,7 @@ class SNS extends React.Component {
                       />
                     </div>
                     <Typography className={classes.inlineBlock} variant="h4">
-                      작성자이름
-                      {this.props.IDX}
+                      {this.props.WRITER}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -75,7 +71,7 @@ class SNS extends React.Component {
                     className={classes.tableMagin}
                     variant="subtitle1"
                   >
-                    내용입니다!
+                    {this.props.CONTENT}
                   </Typography>
                 </TableRow>
               </TableCell>
